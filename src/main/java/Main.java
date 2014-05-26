@@ -1,11 +1,13 @@
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.core.ZipFile;
+import java.io.File;
+import java.io.IOException;
 
 /**
- * Created by baxue on 5/23/2014.
+ * @author baxue
  */
 public class Main {
 
@@ -14,14 +16,13 @@ public class Main {
     private static String v1;
     private static String v2;
     private static String v3;
+    private static String dbName;
 
 
     /**
      * pt-854-903-r1
-     *
-     * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         logger.info("begin");
 
         if (args.length == 0) {
@@ -42,19 +43,30 @@ public class Main {
         v2 = paras[2];
         v3 = paras[3];
 
+        dbName = lic + v1.charAt(v1.length() - 1) + v2 + v3;
+        dbName = dbName.toUpperCase();
+        //PT4903R1
 
         unzip();
+
+        orattach();
+
         logger.info("done");
+    }
+
+    private static void orattach() throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/C", "start", "orattach.bat", dbName);
+        processBuilder.directory(new File("c:\\orattach\\scripts\\"));
+        processBuilder.start();
+
     }
 
     /**
      * v:\relops\PTDatabase\fsdmo\FS854-903R1\FSDMO_854_903R1_ORAU.zip
      * v:\relops\PTDatabase\ptsys\PT854-903R1\PTSYS_854_903R1_ORAU.zip
      */
-    private static void unzip() {
-        //PT4903R1
-        String destination = "c:\\" + lic + v1.charAt(v1.length() - 1) + v2 + v3;
-        destination = destination.toUpperCase();
+    private static void unzip() throws ZipException {
+        String destination = "c:\\" + dbName;
         logger.debug(destination);
 
         String source = "v:\\relops\\PTDatabase\\";
@@ -67,13 +79,10 @@ public class Main {
 
         logger.debug(source);
 
-        try {
-            ZipFile zipFile = new ZipFile(source);
-            logger.info("begin unzip, may take time...");
-            zipFile.extractAll(destination);
-            logger.info("unzip done.");
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
+        ZipFile zipFile = new ZipFile(source);
+        logger.info("begin unzip, may take time...");
+        zipFile.extractAll(destination);
+        logger.info("unzip done.");
+
     }
 }
