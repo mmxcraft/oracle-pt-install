@@ -55,6 +55,7 @@ public class Main {
     }
 
     private static void orattach() throws IOException, InterruptedException {
+        logger.info("begin orattach");
         ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/C", "start", "orattach.bat", dbName);
         processBuilder.directory(new File("c:\\orattach\\scripts\\"));
         processBuilder.start();
