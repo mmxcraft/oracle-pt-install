@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,17 +34,42 @@ public class Main {
     private static Map<String, String> licMap = new HashMap<String, String>(3);
 
 
-    /**
-     * pt-854-903-r1
-     */
     public static void main(String[] args) throws Exception {
         logger.info("begin install people tools");
 
         init(args);
 
-        installDatabase();
+//        installDatabase();
+        copyPT();
+
 
         logger.info("people tools installed");
+    }
+
+    private static void copyPT() throws IOException {
+        //v:\build\pt\pt855\855-101-I1\debug\WINX86\pt855-101-I1-debug\
+        /**
+         * jre
+         SETUP\PsMpPIAInstall
+         SETUP\PsTestFramework
+         actional
+         ACTIVEX
+         Apps
+         APPSERV
+         BIN\CLIENT
+         BIN\SERVER\WINX86
+         CLASS
+         DATA
+         dict
+         pgpsdk302
+         secvault
+         TUXEDO
+         utility
+         psconfig.bat
+         */
+        Path source = Paths.get("v:\\build\\pt\\pt855\\855-101-I1\\debug\\WINX86\\pt855-101-I1-debug\\SETUP\\PsMpPIAInstall\\");
+        Path target = Paths.get("D:\\pt855-101-I1-debug\\SETUP\\PsMpPIAInstall\\");
+        Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES);
     }
 
     private static void installDatabase() throws ZipException, IOException, InterruptedException {
