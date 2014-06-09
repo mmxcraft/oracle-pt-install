@@ -4,13 +4,14 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -20,10 +21,11 @@ import java.util.logging.Logger;
  * @date 2014/6/3.
  */
 public class WifiServlet extends HttpServlet {
+    public static final String mailList = "xbaofeng@gmail.com," +
+            "2938187216@qq.com,brian.sheng@oracle.com," +
+            "1469253517@qq.com,hao.z.zhang@oracle.com";
     private static final Logger logger = Logger.getLogger(WifiServlet.class.getName());
-
-
-    private String storedPassword;
+    private static String storedPassword;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -31,6 +33,7 @@ public class WifiServlet extends HttpServlet {
 
         String incomingPassword = req.getParameter("p");
         logger.info("incomingPassword:" + incomingPassword);
+        logger.info("storedPassword:" + storedPassword);
         if (incomingPassword != null
                 && !incomingPassword.equals(storedPassword)
                 && !"".equals(incomingPassword)) {
@@ -45,13 +48,13 @@ public class WifiServlet extends HttpServlet {
                 Message msg = new MimeMessage(session);
                 InternetAddress address = new InternetAddress("xbaofeng@gmail.com", "Baofeng Xue");
                 msg.setFrom(address);
-                msg.addRecipient(Message.RecipientType.TO, address);
-                msg.setSubject("Oracle Beijing Wifi" + new Date());
+                msg.addRecipients(Message.RecipientType.TO,
+                        InternetAddress.parse(mailList));
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                msg.setSubject("Oracle Beijing Wifi-" + dateFormat.format(new Date()));
                 msg.setText(storedPassword);
                 Transport.send(msg);
 
-            } catch (AddressException e) {
-                logger.severe(e.toString());
             } catch (MessagingException e) {
                 logger.severe(e.toString());
             }
