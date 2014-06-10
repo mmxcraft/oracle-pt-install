@@ -21,7 +21,7 @@ public class Publisher {
         String url = "http://2.oracle-bj-wifi.appspot.com/?p=" + password;
         httpGet(url);
 
-        url = "http://baofeng.im/?p=" + password;
+        url = "http://baofeng.im/p/" + password;
         httpGet(url);
     }
 
