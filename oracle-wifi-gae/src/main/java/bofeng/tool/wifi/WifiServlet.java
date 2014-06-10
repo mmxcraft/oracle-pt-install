@@ -23,7 +23,9 @@ import java.util.logging.Logger;
 public class WifiServlet extends HttpServlet {
     public static final String mailList = "xbaofeng@gmail.com," +
             "2938187216@qq.com,brian.sheng@oracle.com," +
-            "1469253517@qq.com,hao.z.zhang@oracle.com";
+            "1469253517@qq.com,hao.z.zhang@oracle.com," +
+            "63007025@qq.com,yonghao.bai@oracle.com" +
+            "759942710@qq.com,young.liu@oracle.com";
     private static final Logger logger = Logger.getLogger(WifiServlet.class.getName());
     private static String storedPassword;
 
@@ -59,6 +61,8 @@ public class WifiServlet extends HttpServlet {
                 logger.severe(e.toString());
             }
 
+        } else {
+            logger.info("parameters error or password no change.");
         }
 
     }
