@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="install-pt" default="default">
+
+
+    <target name="default">
+
+        <copy todir="D:\pt855-101-I1-debug">
+            <fileset dir="v:\build\pt\pt855\855-101-I1\debug\WINX86\pt855-101-I1-debug">
+                <include name="SETUP\PsMpPIAInstall\**"/>
+                <include name="SETUP\PsTestFramework\**"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+</project>
