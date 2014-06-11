@@ -11,6 +11,7 @@ import java.io.IOException;
  * @date 2014/6/10.
  */
 public class Publisher {
+    public static final int RETRY_TIMES = 10;
     final static Logger logger = LoggerFactory.getLogger(Publisher.class);
 
     static void publish(String password) throws IOException {
@@ -19,17 +20,20 @@ public class Publisher {
         System.setProperty("http.proxyPort", "80");
 
         String url = "http://2.oracle-bj-wifi.appspot.com/?p=" + password;
-        httpGet(url);
+        httpGet(url, RETRY_TIMES);
 
         url = "http://baofeng.im/p/" + password;
-        httpGet(url);
+        httpGet(url, RETRY_TIMES);
     }
 
-    private static void httpGet(String url) throws IOException {
+    private static void httpGet(String url, int retryTimes) throws IOException {
         try {
             Jsoup.connect(url).get();
         } catch (IOException e) {
-            logger.error("e:{}", e);
+            logger.error("url:{},times:{},e:{}", url, retryTimes, e);
+            if (retryTimes > 0) {
+                httpGet(url, --retryTimes);
+            }
         }
         logger.debug("publish:{}", url);
     }
