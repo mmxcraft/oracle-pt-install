@@ -14,7 +14,7 @@ public class Publisher {
     public static final int RETRY_TIMES = 10;
     final static Logger logger = LoggerFactory.getLogger(Publisher.class);
 
-    static void publish(String password) throws IOException {
+    static void publish(String password) throws Exception {
 
         System.setProperty("http.proxyHost", "146.56.234.217");
         System.setProperty("http.proxyPort", "80");
@@ -26,12 +26,13 @@ public class Publisher {
         httpGet(url, RETRY_TIMES);
     }
 
-    private static void httpGet(String url, int retryTimes) throws IOException {
+    private static void httpGet(String url, int retryTimes) throws Exception {
         try {
             Jsoup.connect(url).get();
         } catch (IOException e) {
             logger.error("url:{},times:{},e:{}", url, retryTimes, e);
             if (retryTimes > 0) {
+                Thread.sleep(1000 * 60 * 5);
                 httpGet(url, --retryTimes);
             }
         }
