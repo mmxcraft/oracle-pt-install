@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 /**
@@ -24,6 +25,9 @@ public class WifiServlet extends HttpServlet {
     public static final String mailList = "xbaofeng@gmail.com,29994106@qq.com," +
             "2938187216@qq.com,brian.sheng@oracle.com," +
             "1469253517@qq.com,hao.z.zhang@oracle.com," +
+            "63007025@qq.com,yonghao.bai@oracle.com," +
+            "351111469@qq.com,mofeng.ma@oracle.com," +
+            "22943043@qq.com,edwin.li@oracle.com," +
             "63007025@qq.com,yonghao.bai@oracle.com," +
             "759942710@qq.com,young.liu@oracle.com,";
     private static final Logger logger = Logger.getLogger(WifiServlet.class.getName());
@@ -53,7 +57,9 @@ public class WifiServlet extends HttpServlet {
                 msg.addRecipients(Message.RecipientType.TO,
                         InternetAddress.parse(mailList));
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                msg.setSubject("Oracle Beijing Wifi-" + dateFormat.format(new Date()));
+                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
+                Date date = new Date();
+                msg.setSubject("Oracle Beijing Wifi-" + dateFormat.format(date));
                 msg.setText(storedPassword);
                 Transport.send(msg);
 
