@@ -39,15 +39,15 @@ public class Main {
 
         init(args);
 
-//        installDatabase();
-        copyPT();
+        installDatabase();
+//        copyPT();
 
 
         logger.info("people tools installed");
     }
 
     private static void copyPT() throws IOException {
-        //v:\build\pt\pt855\855-101-I1\debug\WINX86\pt855-101-I1-debug\
+
         /**
          * jre
          SETUP\PsMpPIAInstall
@@ -105,7 +105,7 @@ public class Main {
         licSet.add("fs");
 
         licMap.put("qe", "dmo");
-        licMap.put("pt", "dmo");
+        licMap.put("pt", "sys");
         licMap.put("fs", "dmo");
 
         if (!licSet.contains(lic.toLowerCase())) {
@@ -139,6 +139,8 @@ public class Main {
     }
 
     //v:\relops\PTDatabase\qedmo\qe855-101i1\qedmo_855_101i1_ORAU.zip
+    //v:\relops\PTDatabase\ptsys\PT855-101R2\PTSYS_855_101R2_ORAU.zip
+    //v:\relops\PTDatabase\ptdmo\pt855-101r2\ptdmo_855_101r2_ORAU.zip
     private static String buildSource() {
         StringBuilder source = new StringBuilder("v:\\relops\\PTDatabase\\");
 
