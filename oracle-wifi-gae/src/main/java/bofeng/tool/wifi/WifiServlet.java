@@ -21,11 +21,11 @@ import java.util.logging.Logger;
  * @date 2014/6/3.
  */
 public class WifiServlet extends HttpServlet {
-    public static final String mailList = "xbaofeng@gmail.com," +
+    public static final String mailList = "xbaofeng@gmail.com,29994106@qq.com," +
             "2938187216@qq.com,brian.sheng@oracle.com," +
             "1469253517@qq.com,hao.z.zhang@oracle.com," +
-            "63007025@qq.com,yonghao.bai@oracle.com" +
-            "759942710@qq.com,young.liu@oracle.com";
+            "63007025@qq.com,yonghao.bai@oracle.com," +
+            "759942710@qq.com,young.liu@oracle.com,";
     private static final Logger logger = Logger.getLogger(WifiServlet.class.getName());
     private static String storedPassword;
 
