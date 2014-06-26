@@ -1,16 +1,10 @@
 package baofeng.tool.pt;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
+import org.apache.tools.ant.types.FileSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,7 +34,7 @@ public class Main {
         init(args);
 
         installDatabase();
-//        copyPT();
+        copyPT();
 
 
         logger.info("people tools installed");
@@ -48,34 +42,53 @@ public class Main {
 
     private static void copyPT() throws IOException {
 
-        /**
-         * jre
-         SETUP\PsMpPIAInstall
-         SETUP\PsTestFramework
-         actional
-         ACTIVEX
-         Apps
-         APPSERV
-         BIN\CLIENT
-         BIN\SERVER\WINX86
-         CLASS
-         DATA
-         dict
-         pgpsdk302
-         secvault
-         TUXEDO
-         utility
-         psconfig.bat
-         */
-        Path source = Paths.get("v:\\build\\pt\\pt855\\855-101-I1\\debug\\WINX86\\pt855-101-I1-debug\\SETUP\\PsMpPIAInstall\\");
-        Path target = Paths.get("D:\\pt855-101-I1-debug\\SETUP\\PsMpPIAInstall\\");
-        Files.copy(source, target, StandardCopyOption.COPY_ATTRIBUTES);
+        CopyTask copyTask = new CopyTask();
+        String des = "D:\\" + lic + v1 + "-" + v2 + "-" + v3 + "-" + "debug";
+        copyTask.setTodir(new File(des.toUpperCase()));
+        FileSet fileSet = new FileSet();
+        String src = "v:\\build\\pt\\pt" + v1 + "\\" + v1 + "-" + v2 + "-" + v3 +
+                "\\debug\\WINX86\\" + lic + v1 + "-" + v2 + "-" + v3 + "-" + "debug";
+        logger.info("copy from'{}' to '{}'", src, des);
+        fileSet.setDir(new File(src));
+        fileSet.setIncludes("jre\\**,SETUP\\PsMpPIAInstall\\**,SETUP\\PsTestFramework\\**,actional\\**,ACTIVEX\\**,Apps\\**,APPSERV\\**,BIN\\CLIENT\\**,BIN\\SERVER\\WINX86\\**,CLASS\\**,DATA\\**,dict\\**,pgpsdk302\\**,secvault\\**,TUXEDO\\**,utility\\**,psconfig.bat");
+        copyTask.addFileset(fileSet);
+        copyTask.execute();
+        logger.info("copy done");
     }
 
-    private static void installDatabase() throws ZipException, IOException, InterruptedException {
-        unzip();
+    private static void installDatabase() throws Exception {
+
+        if (dbInstalled()) {
+            logger.info("dbInstalled, skip");
+            return;
+        }
+
+
+        unzipDatabase();
 
         orattach();
+    }
+
+    private static boolean dbInstalled() throws Exception {
+
+        String version = lic + v1.charAt(2) + v2 + v3;
+        String OracleServiceName = "OracleService" + version.toUpperCase();
+
+        ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/C", "sc query " + OracleServiceName);
+        processBuilder.redirectErrorStream(true);
+        Process process = processBuilder.start();
+        InputStream is = process.getInputStream();
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            if (line.contains(OracleServiceName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void init(String[] args) {
@@ -123,7 +136,7 @@ public class Main {
     }
 
 
-    private static void unzip() throws ZipException {
+    private static void unzipDatabase() {
         String destination = "c:\\" + dbName;
         logger.debug(destination);
 
@@ -131,15 +144,17 @@ public class Main {
 
         logger.debug(source);
 
-        ZipFile zipFile = new ZipFile(source);
-        logger.info("begin unzip, may take time...");
-        zipFile.extractAll(destination);
-        logger.info("unzip done.");
+        logger.info("begin unzipDatabase, may take time...");
+
+        ExpandTask expander = new ExpandTask();
+        expander.setSrc(new File(source));
+        expander.setDest(new File(destination));
+        expander.execute();
+
+        logger.info("unzipDatabase done.");
 
     }
 
-    //v:\relops\PTDatabase\qedmo\qe855-101i1\qedmo_855_101i1_ORAU.zip
-    //v:\relops\PTDatabase\ptsys\PT855-101R2\PTSYS_855_101R2_ORAU.zip
     //v:\relops\PTDatabase\ptdmo\pt855-101r2\ptdmo_855_101r2_ORAU.zip
     private static String buildSource() {
         StringBuilder source = new StringBuilder("v:\\relops\\PTDatabase\\");
