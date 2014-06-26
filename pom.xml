@@ -34,7 +34,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>baofeng.tool.pt.Main</mainClass>
+                            <mainClass>baofeng.tool.pt.InstallAll</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
